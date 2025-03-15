@@ -2,7 +2,7 @@
 <resources>
     <color name="pale_green">#ffa5d1a3</color>
     <color name="green">#4a9d48</color>
-    <color name="white_85">#D8ffffff</color>
+    <color name="white_80">#CCffffff</color>
     <color name="red_velvet">#b4061a</color>
     <color name="purple">#8313bb</color>
     <color name="mid_grey">#a5a5a5</color>
@@ -10,4 +10,5 @@
     <color name="dark_purple_50">#804B3656</color>
     <color name="light_grey">#c0c0c0</color>
     <color name="dark_grey">#767676</color>
+    <dimen name="input_padding">10dp</dimen>
 </resources>
