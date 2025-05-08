@@ -8,6 +8,12 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="WithinRangeAppTheme" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryVariant">@color/green</item>
+        <item name="colorSecondary">@color/purple</item>
+    </style>
+
     <style name="Theme.WithinRange.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.WithinRange.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

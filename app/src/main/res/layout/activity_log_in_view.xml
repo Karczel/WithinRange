@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/green"
-    tools:context=".LoginViewActivity">
+    tools:context=".LogInViewActivity">
 
     <ImageView
         android:id="@+id/imageView3"
@@ -46,24 +46,28 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:height="45dp"
+            android:background="#00FFFFFF"
             android:hint="username" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/login_pwd"
         android:layout_width="250dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="70dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
         android:background="@drawable/rounded_white_background"
         android:paddingLeft="@dimen/input_padding"
         android:paddingEnd="@dimen/input_padding"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textView2">
+        app:layout_constraintTop_toBottomOf="@+id/login_username">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:height="45dp"
+            android:background="#00FFFFFF"
             android:hint="password" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -76,7 +80,7 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signup_pwd">
+        app:layout_constraintTop_toBottomOf="@+id/login_pwd">
 
         <ImageView
             android:id="@+id/imageView4"
@@ -106,10 +110,14 @@
 
     <Button
         android:id="@+id/button"
-        android:layout_width="232dp"
+        android:layout_width="260dp"
         android:layout_height="50dp"
+        android:background="@drawable/rounded_white_background"
+        android:backgroundTint="@color/white"
         android:text="Sign In"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        tools:layout_editor_absoluteX="90dp" />
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
