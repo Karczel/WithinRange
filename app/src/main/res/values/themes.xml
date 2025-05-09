@@ -17,4 +17,13 @@
     <style name="Theme.WithinRange.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.WithinRange.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="WithinRangeAppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="WithinRangeAppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="WithinRangeAppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

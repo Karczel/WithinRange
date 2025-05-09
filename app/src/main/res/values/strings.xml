@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">WithinRange</string>
-    
+
     <string name="client_id">42443763427-sge4m5m0e3etrrip53ntnjmec1mspib4.apps.googleusercontent.com</string>
-    
+
     <string name="title_activity_map_view">MapViewActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -15,4 +15,8 @@
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="title_activity_navigation_sidebar">NavigationSidebarActivity</string>
+    <string name="title_activity_dashboard">Dashboard</string>
+    <string name="title_activity_schedule">ScheduleActivity</string>
+    <string name="title_activity_path_history">PathHistoryActivity</string>
 </resources>

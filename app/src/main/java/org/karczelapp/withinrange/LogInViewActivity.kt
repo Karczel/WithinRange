@@ -2,6 +2,8 @@ package org.karczelapp.withinrange
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -16,6 +18,11 @@ class LogInViewActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val mapApiKey = BuildConfig.MAPS_API_KEY
+        Log.i("MAPS_API_KEY", "MAPS API KEY = "+ mapApiKey)
+
+
         enableEdgeToEdge()
         setContentView(R.layout.activity_log_in_view)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -36,7 +43,9 @@ class LogInViewActivity : AppCompatActivity() {
             val password = pwd.text.toString()
 
             if (email.isNotEmpty() && password.isNotEmpty()) {
-                signInWithEmail(email, password)
+                startActivity(Intent(this, MapViewActivity::class.java))
+                //connect with firebase auth
+                //signInWithEmail(email, password)
             } else {
                 Toast.makeText(this, "Please enter email and password.", Toast.LENGTH_SHORT).show()
             }
