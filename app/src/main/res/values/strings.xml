@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">WithinRange</string>
+    
+    <string name="client_id">42443763427-sge4m5m0e3etrrip53ntnjmec1mspib4.apps.googleusercontent.com</string>
+    
     <string name="title_activity_map_view">MapViewActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
