@@ -17,11 +17,6 @@
         android:theme="@style/WithinRangeAppTheme"
         tools:targetApi="31">
 
-        <activity
-            android:name=".NavigationSidebarActivity"
-            android:exported="false"
-            android:label="@string/title_activity_navigation_sidebar"
-            android:theme="@style/WithinRangeAppTheme" />
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
@@ -56,6 +51,11 @@
             android:exported="false"
             android:label="@string/title_activity_dashboard"
             android:theme="@style/WithinRangeAppTheme" />
+        <activity
+            android:name=".NavigationSidebarActivity"
+            android:exported="false"
+            android:label="@string/title_activity_navigation_sidebar"
+            android:theme="@style/WithinRangeAppTheme.NoActionBar" />
         <activity
             android:name=".LogInViewActivity"
             android:exported="true"
