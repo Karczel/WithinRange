@@ -19,8 +19,10 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material.icons.filled.*
-import androidx.compose.ui.Alignment
+import androidx.compose.material.icons.outlined.*
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.ui.graphics.vector.ImageVector
 
 
@@ -70,18 +72,34 @@ fun SidebarNavigationDrawer(
         drawerContent = {
             ModalDrawerSheet {
                 Text("Menu", style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(16.dp))
-                Divider()
+                HorizontalDivider()
 
-                SidebarItem("Home", Icons.Default.Home, onClick = {
-                    onItemClick("home")
+                SidebarItem("Profile", Icons.Default.Person, onClick = {
+                    onItemClick("profile")
                     scope.launch { drawerState.close() }
                 })
-                SidebarItem("Map", Icons.Default.Place, onClick = {
+                SidebarItem("Map", Icons.Default.LocationOn, onClick = {
                     onItemClick("map")
+                    scope.launch { drawerState.close() }
+                })
+                SidebarItem("Path History", Icons.Outlined.LocationOn, onClick = {
+                    onItemClick("path_history")
+                    scope.launch { drawerState.close() }
+                })
+                SidebarItem("To Go", Icons.Filled.DateRange, onClick = {
+                    onItemClick("schedule")
+                    scope.launch { drawerState.close() }
+                })
+                SidebarItem("Group To Go", Icons.Outlined.DateRange, onClick = {
+                    onItemClick("dashboard")
                     scope.launch { drawerState.close() }
                 })
                 SidebarItem("Settings", Icons.Default.Settings, onClick = {
                     onItemClick("settings")
+                    scope.launch { drawerState.close() }
+                })
+                SidebarItem("Help", Icons.Default.MoreVert, onClick = {
+                    onItemClick("help")
                     scope.launch { drawerState.close() }
                 })
             }
@@ -117,7 +135,7 @@ fun MainScreenWithSidebar() {
                         IconButton(onClick = {
                             scope.launch { drawerState.open() }
                         }) {
-                            Icon(Icons.Default.Menu, contentDescription = "Menu")
+                            Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = "Menu")
                         }
                     }
                 )
