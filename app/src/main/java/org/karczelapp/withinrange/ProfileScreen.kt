@@ -14,7 +14,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
-
+data class User(
+    val uid: String = "",
+    val name: String? = "",
+    val groupIds: List<String>? = listOf()
+)
 
 @Composable
 fun ProfileScreen() {
