@@ -17,13 +17,16 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
-import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.*
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import org.karczelapp.withinrange.DestinationScreens
 
 
 class MainActivity : ComponentActivity() {
@@ -61,8 +64,10 @@ fun GreetingPreview() {
 
 @Composable
 fun SidebarNavigationDrawer(
-    drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
-    onItemClick: (String) -> Unit = {},
+    navController: NavHostController,
+    drawerState: DrawerState,
+    navSelectedItem: Int,
+    onNavItemSelected: (Int) -> Unit,
     content: @Composable () -> Unit
 ) {
     val scope = rememberCoroutineScope()
@@ -73,60 +78,44 @@ fun SidebarNavigationDrawer(
             ModalDrawerSheet {
                 Text("Menu", style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(16.dp))
                 HorizontalDivider()
-
-                SidebarItem("Profile", Icons.Default.Person, onClick = {
-                    onItemClick("profile")
-                    scope.launch { drawerState.close() }
-                })
-                SidebarItem("Map", Icons.Default.LocationOn, onClick = {
-                    onItemClick("map")
-                    scope.launch { drawerState.close() }
-                })
-                SidebarItem("Path History", Icons.Outlined.LocationOn, onClick = {
-                    onItemClick("path_history")
-                    scope.launch { drawerState.close() }
-                })
-                SidebarItem("To Go", Icons.Filled.DateRange, onClick = {
-                    onItemClick("schedule")
-                    scope.launch { drawerState.close() }
-                })
-                SidebarItem("Group To Go", Icons.Outlined.DateRange, onClick = {
-                    onItemClick("dashboard")
-                    scope.launch { drawerState.close() }
-                })
-                SidebarItem("Settings", Icons.Default.Settings, onClick = {
-                    onItemClick("settings")
-                    scope.launch { drawerState.close() }
-                })
-                SidebarItem("Help", Icons.Default.MoreVert, onClick = {
-                    onItemClick("help")
-                    scope.launch { drawerState.close() }
-                })
+                NavItemInfo().getAllNavItems().forEachIndexed { index, itemInfo ->
+                    NavigationDrawerItem(
+                        selected = (index == navSelectedItem),
+                        onClick = {
+                            onNavItemSelected(index)
+                            navController.navigate(itemInfo.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                            scope.launch { drawerState.close() }
+                        },
+                        icon = { Icon(imageVector = itemInfo.icon, contentDescription = itemInfo.label) },
+                        label = { Text(text = itemInfo.label) }
+                    )
+                }
             }
         },
         content = content
     )
 }
 
-@Composable
-private fun SidebarItem(title: String, icon: ImageVector, onClick: () -> Unit) {
-    NavigationDrawerItem(
-        label = { Text(title) },
-        icon = { Icon(icon, contentDescription = title) },
-        selected = false,
-        onClick = onClick
-    )
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreenWithSidebar() {
+    val navController = rememberNavController()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    var navSelectedItem by rememberSaveable { mutableStateOf(0) }
 
-    SidebarNavigationDrawer(drawerState = drawerState, onItemClick = {
-        // Handle navigation based on key
-    }) {
+    SidebarNavigationDrawer(
+        navController = navController,
+        drawerState = drawerState,
+        navSelectedItem = navSelectedItem,
+        onNavItemSelected = { navSelectedItem = it }
+    ) {
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -141,8 +130,18 @@ fun MainScreenWithSidebar() {
                 )
             }
         ) { padding ->
-            Box(modifier = Modifier.padding(padding)) {
-                Text("Main content here")
+            NavHost(
+                navController = navController,
+                startDestination = DestinationScreens.Map.route,
+                modifier = Modifier.padding(padding)
+            ) {
+                composable(DestinationScreens.Map.route) { MapScreen() }
+                composable(DestinationScreens.Profile.route) { ProfileScreen() }
+                composable(DestinationScreens.PathHistory.route) { PathHistoryScreen() }
+                composable(DestinationScreens.ToGo.route) { ScheduleScreen() }
+                composable(DestinationScreens.GroupToGo.route) { DashboardScreen() }
+                composable(DestinationScreens.Settings.route) { SettingsScreen() }
+                composable(DestinationScreens.Help.route) { HelpScreen() }
             }
         }
     }

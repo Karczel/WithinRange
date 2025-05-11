@@ -7,17 +7,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import org.karczelapp.withinrange.ui.theme.WithinRangeTheme
 
 @Composable
-fun ScheduleScreen(modifier: Modifier = Modifier) {
+fun HelpScreen(modifier: Modifier = Modifier) {
     Text(
-        text = "To Go Screen",
+        text = "Help Screen",
         modifier = modifier
     )
 }
 
 @Preview(showBackground = true)
 @Composable
-fun ScheduleScreenPreview() {
+fun HelpScreenPreview() {
     WithinRangeTheme {
-        ScheduleScreen()
+        HelpScreen()
     }
 }
