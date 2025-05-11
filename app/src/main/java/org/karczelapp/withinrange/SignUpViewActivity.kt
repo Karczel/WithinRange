@@ -9,8 +9,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.auth
+import com.google.firebase.Firebase
 
 class SignUpViewActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -24,8 +26,7 @@ class SignUpViewActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        auth = FirebaseAuth.getInstance()
+        auth = Firebase.auth
 
         val emailField: EditText = findViewById(R.id.emailText2)
         val passwordField: EditText = findViewById(R.id.pwdText2)
@@ -34,8 +35,8 @@ class SignUpViewActivity : AppCompatActivity() {
 
         btnSignin.setOnClickListener {
             val email = emailField.text.toString().trim()
-            val password = passwordField.text.toString()
-            val confirmPassword = confirmPasswordField.text.toString()
+            val password = passwordField.text.toString().trim()
+            val confirmPassword = confirmPasswordField.text.toString().trim()
 
             if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
                 Toast.makeText(this, "All fields required", Toast.LENGTH_SHORT).show()
@@ -52,12 +53,22 @@ class SignUpViewActivity : AppCompatActivity() {
                     if (task.isSuccessful) {
                         Toast.makeText(this, "Sign-up successful", Toast.LENGTH_SHORT).show()
                         startActivity(Intent(this, LogInViewActivity::class.java))
-                        finish()
                     } else {
                         Toast.makeText(this, "Sign-up failed: ${task.exception?.message}", Toast.LENGTH_LONG).show()
                     }
                 }
         }
+    }
 
+    public override fun onStart() {
+        super.onStart()
+        // Check if user is signed in (non-null) and update UI accordingly.
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            reload()
+        }
+    }
+    private fun reload() {
+        startActivity(Intent(this, MainActivity::class.java))
     }
 }
