@@ -97,8 +97,6 @@ fun MapScreen(){
             Column ( modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally){
-                Text(text = "Events Near Me")
-                LocationCoordinateDisplay(lat = latValue.toString(), lon = lonValue.toString())
                 if(latValue!=null && lonValue!=null)
                     mapDisplay(lat = latValue!!, lon = lonValue!!)
                 else mapDisplay()
@@ -113,58 +111,39 @@ private suspend fun CameraPositionState.centerOnLocation(location: LatLng) = ani
 )
 
 @Composable
-fun LocationCoordinateDisplay( lat:String, lon:String ){
-    ConstraintLayout ( modifier = Modifier.fillMaxWidth(1f).padding(all = 8.dp) ){
-        // declare reference points
-        val (goBtn, latFiend, lonField) = createRefs()
-        Button( onClick = { /* TODO */ }, modifier = Modifier.constrainAs(goBtn){
-            top.linkTo(parent.top, margin = 8.dp)
-            end.linkTo(parent.end, margin = 0.dp)
-            width = Dimension.wrapContent
-        } ) {
-            Text(text = "GO")
-        }
-        OutlinedTextField( value = lat, label = { Text(text = "Latitude") },
-            onValueChange = {}, modifier = Modifier.constrainAs(latFiend) {
-                top.linkTo(parent.top, margin = 0.dp)
-                start.linkTo(parent.start, margin = 0.dp)
-                end.linkTo(goBtn.start, margin = 8.dp)
-                width = Dimension.fillToConstraints
-            }
-        )
-        OutlinedTextField( value = lon, label = { Text(text = "Longitude") },
-            onValueChange = {}, modifier = Modifier.constrainAs(lonField){
-                top.linkTo(latFiend.bottom, margin = 0.dp)
-                start.linkTo(parent.start, margin = 0.dp)
-                end.linkTo(goBtn.start, margin = 8.dp)
-                width = Dimension.fillToConstraints
-            }
-        )
-    }
-}
-
-@Composable
 fun mapDisplay(lat:Double = 13.74466, lon:Double = 100.53291,
                zoomLevel:Float = 13f, mapType: MapType = MapType.NORMAL)
 {
     val location = LatLng(lat, lon)
-    /*
-    val cameraState = rememberCameraPositionState{
-        position = CameraPosition.fromLatLngZoom(location, zoomLevel)
-    }*/
+    val selectedLocation = remember { mutableStateOf(LatLng(lat, lon)) }
+
 
     val cameraState = rememberCameraPositionState()
+    val hasMovedCamera = remember { mutableStateOf(false) }
+
     LaunchedEffect(key1 = location) {
-        cameraState.centerOnLocation(location)
+        if (!hasMovedCamera.value) {
+            cameraState.move(CameraUpdateFactory.newLatLngZoom(location, zoomLevel))
+            hasMovedCamera.value = true
+        }
     }
-    GoogleMap(modifier = Modifier.fillMaxSize(),
+    GoogleMap(
+        modifier = Modifier.fillMaxSize(),
         properties = MapProperties(mapType = mapType),
-        cameraPositionState = cameraState
-    ){
-        // content inside of map
-        Marker( state = MarkerState(position = location),
-            title = "You are Here", snippet = "Your Location")
+        cameraPositionState = cameraState,
+        onMapClick = { latLng ->
+            // Handle map click
+            selectedLocation.value = latLng
+        }
+    ) {
+        // Show marker at selected location
+        Marker(
+            state = MarkerState(position = selectedLocation.value),
+            title = "This",
+            snippet = "Selected Location"
+        )
     }
+
 }
 
 @Preview(showBackground = true, showSystemUi = true)
