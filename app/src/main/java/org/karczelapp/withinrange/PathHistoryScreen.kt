@@ -2,7 +2,6 @@ package org.karczelapp.withinrange
 
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
-import android.location.Location
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -41,14 +39,15 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
-import com.google.maps.android.compose.MarkerState.Companion.invoke
+import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
+import org.karczelapp.withinrange.dataclass.PathHistory
 import org.karczelapp.withinrange.ui.theme.WithinRangeTheme
 
-data class PathHistory(
-    val uid:String = "",
-    val location: GeoPoint = GeoPoint(0.0, 0.0),
-    val timestamp:Timestamp = Timestamp.now()
+val mockHistory = listOf(
+    PathHistory("user", GeoPoint(13.7441, 100.5321), Timestamp.now()),
+    PathHistory("user", GeoPoint(13.7450, 100.5330), Timestamp.now()),
+    PathHistory("user", GeoPoint(13.7460, 100.5340), Timestamp.now()),
 )
 
 @Composable
@@ -102,8 +101,8 @@ fun PathHistoryScreen(modifier: Modifier = Modifier) {
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally){
                 if(latValue!=null && lonValue!=null)
-                    mapDisplayWithPath(lat = latValue!!, lon = lonValue!!)
-                else mapDisplayWithPath()
+                    MapDisplayWithPath(lat = latValue?: 13.74466, lon = lonValue?: 100.53291, history = mockHistory)
+                else MapDisplayWithPath()
             }
         }
     }
@@ -115,12 +114,13 @@ private suspend fun CameraPositionState.centerOnLocation(location: LatLng) = ani
 )
 
 @Composable
-fun mapDisplayWithPath(lat:Double = 13.74466, lon:Double = 100.53291,
-               zoomLevel:Float = 13f, mapType: MapType = MapType.NORMAL)
+fun MapDisplayWithPath(lat:Double = 13.74466, lon:Double = 100.53291,
+                       zoomLevel:Float = 13f, mapType: MapType = MapType.NORMAL,
+                       history: List<PathHistory> = emptyList())
 {
     val location = LatLng(lat, lon)
     val selectedLocation = remember { mutableStateOf(LatLng(lat, lon)) }
-
+    val currentLocation = LatLng(lat, lon) //get current location from auth.current user
 
     val cameraState = rememberCameraPositionState()
     val hasMovedCamera = remember { mutableStateOf(false) }
@@ -140,6 +140,42 @@ fun mapDisplayWithPath(lat:Double = 13.74466, lon:Double = 100.53291,
             selectedLocation.value = latLng
         }
     ) {
+        // Polyline for path history
+        if (history.size >= 2) {
+            Polyline(
+                points = history.map {
+                    LatLng(it.location.latitude, it.location.longitude)
+                },
+                color = androidx.compose.ui.graphics.Color.Blue,
+                width = 6f
+            )
+        }
+
+        // Start and end markers
+        history.firstOrNull()?.let {
+            Marker(
+                state = MarkerState(position = LatLng(it.location.latitude, it.location.longitude)),
+                title = "Start",
+                snippet = "Path started here"
+            )
+        }
+
+        history.lastOrNull()?.let {
+            Marker(
+                state = MarkerState(position = LatLng(it.location.latitude, it.location.longitude)),
+                title = "Last",
+                snippet = "Most recent path point"
+            )
+        }
+
+
+        // Current location marker
+        Marker(
+            state = MarkerState(position = currentLocation),
+            title = "Current Location",
+            snippet = "You are here"
+        )
+
         // Show marker at selected location
         Marker(
             state = MarkerState(position = selectedLocation.value),
@@ -147,7 +183,6 @@ fun mapDisplayWithPath(lat:Double = 13.74466, lon:Double = 100.53291,
             snippet = "Selected Location"
         )
     }
-
 }
 
 @Preview(showBackground = true)

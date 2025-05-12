@@ -1,22 +1,58 @@
 package org.karczelapp.withinrange
 
-import com.google.firebase.Timestamp
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.*
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 
 
-enum class InvitationStatus {
-    SENT,
-    ACCEPTED,
-    REJECTED
+@Composable
+fun GroupComponent() {
+    var expanded by remember { mutableStateOf(false) }
+    var selectedText by remember { mutableStateOf("Select Group") }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 16.dp),
+        contentAlignment = Alignment.TopCenter
+    ) {
+        Button(onClick = { expanded = true }) {
+            Text(selectedText)
+        }
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            DropdownMenuItem(
+                text = { Text("Group 1") },
+                onClick = {
+                    selectedText = "Group 1"
+                    expanded = false
+                }
+            )
+            DropdownMenuItem(
+                text = { Text("Group 2") },
+                onClick = {
+                    selectedText = "Group 2"
+                    expanded = false
+                }
+            )
+        }
+    }
 }
 
-data class GroupInvitation(
-    val senderId:String = "",
-    val inviteeId:String = "",
-    val status: InvitationStatus = InvitationStatus.SENT
-    )
-
-data class Group(
-    val groupId:String = "",
-    val groupName:String? = "",
-    val invitations:List<GroupInvitation>? = listOf()
-)
+@Preview(showBackground = true)
+@Composable
+fun GroupComponentPreview() {
+    Surface(modifier = Modifier.fillMaxSize()) {
+        GroupComponent()
+    }
+}

@@ -4,17 +4,12 @@ import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.material3.Button
-import androidx.constraintlayout.compose.Dimension
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -24,11 +19,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester.Companion.createRefs
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -98,8 +91,8 @@ fun MapScreen(){
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally){
                 if(latValue!=null && lonValue!=null)
-                    mapDisplay(lat = latValue!!, lon = lonValue!!)
-                else mapDisplay()
+                    MapDisplay(lat = latValue!!, lon = lonValue!!)
+                else MapDisplay()
             }
         }
     }
@@ -111,7 +104,7 @@ private suspend fun CameraPositionState.centerOnLocation(location: LatLng) = ani
 )
 
 @Composable
-fun mapDisplay(lat:Double = 13.74466, lon:Double = 100.53291,
+fun MapDisplay(lat:Double = 13.74466, lon:Double = 100.53291,
                zoomLevel:Float = 13f, mapType: MapType = MapType.NORMAL)
 {
     val location = LatLng(lat, lon)
