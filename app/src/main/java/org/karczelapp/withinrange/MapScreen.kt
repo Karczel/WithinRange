@@ -114,7 +114,6 @@ fun MapDisplay(lat:Double = 13.74466, lon:Double = 100.53291,
     val cameraState = rememberCameraPositionState()
     val hasMovedCamera = remember { mutableStateOf(false) }
 
-    GroupComponent()
 
     LaunchedEffect(key1 = location) {
         if (!hasMovedCamera.value) {
@@ -131,6 +130,7 @@ fun MapDisplay(lat:Double = 13.74466, lon:Double = 100.53291,
             selectedLocation.value = latLng
         }
     ) {
+        GroupComponent()
         // Show marker at selected location
         Marker(
             state = MarkerState(position = selectedLocation.value),
