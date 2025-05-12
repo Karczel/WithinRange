@@ -29,7 +29,9 @@ fun GroupComponent() {
 
         DropdownMenu(
             expanded = expanded,
-            onDismissRequest = { expanded = false }
+            onDismissRequest = { expanded = false },
+            modifier = Modifier
+                .wrapContentWidth(Alignment.CenterHorizontally)
         ) {
             DropdownMenuItem(
                 text = { Text("Group 1") },

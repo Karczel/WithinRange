@@ -27,7 +27,7 @@ fun ScheduleScreen(modifier: Modifier = Modifier) {
     val mockSchedule = remember {
         listOf(
             Schedule(uid = "user1", taskIds = listOf("Task A", "Task B")),
-            Schedule(uid = "user2", taskIds = listOf("Task C", "Task D", "Task E"))
+            Schedule(uid = "user1", taskIds = listOf("Task C", "Task D", "Task E"))
         )
     }
 
