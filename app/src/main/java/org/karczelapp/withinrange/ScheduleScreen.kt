@@ -20,11 +20,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.dp
-import com.google.firebase.Timestamp
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.GeoPoint
-import org.karczelapp.withinrange.dataclass.Schedule
 import org.karczelapp.withinrange.dataclass.Task
 import org.karczelapp.withinrange.dataclass.TaskStatus
 import org.karczelapp.withinrange.ui.theme.WithinRangeTheme
@@ -36,9 +33,9 @@ fun ScheduleScreen(modifier: Modifier = Modifier) {
         modifier = modifier
     )
 
-    var schedules by remember { mutableStateOf<List<Schedule>>(emptyList()) }
+    var tasks by remember { mutableStateOf<List<Task>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
-    var auth: FirebaseAuth = Firebase.auth
+    val auth = Firebase.auth
     val user = auth.currentUser
     val authUid = user?.uid
 
@@ -51,15 +48,14 @@ fun ScheduleScreen(modifier: Modifier = Modifier) {
 
                 result.documents.forEach { doc ->
                     val scheduleId = doc.id
-                    val uid = doc.getString("uid") ?: return@forEach
 
-                    // Fetch tasks subcollection of each schedule (if you moved to subcollection model)
                     Firebase.firestore.collection("schedules")
                         .document(scheduleId)
                         .collection("tasks")
+                        .orderBy("timeDue", com.google.firebase.firestore.Query.Direction.DESCENDING) // order by timestamp desc
                         .get()
                         .addOnSuccessListener { taskResult ->
-                            val tasks = taskResult.documents.mapNotNull { taskDoc ->
+                            val fetchedTasks = taskResult.documents.mapNotNull { taskDoc ->
                                 val title = taskDoc.getString("title") ?: ""
                                 val details = taskDoc.getString("details")
                                 val location = taskDoc.getGeoPoint("location") ?: GeoPoint(0.0, 0.0)
@@ -80,7 +76,7 @@ fun ScheduleScreen(modifier: Modifier = Modifier) {
                                 )
                             }
 
-                            schedules = schedules + Schedule(uid = uid, tasks = tasks)
+                            tasks = tasks + fetchedTasks.sortedBy { it.timeDue }
                         }
                 }
                 isLoading = false
@@ -97,24 +93,17 @@ fun ScheduleScreen(modifier: Modifier = Modifier) {
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            items(schedules) { schedule ->
-                ScheduleCard(schedule)
+            items(tasks) { task ->
+                ScheduleTaskCard(task)
+                Spacer(modifier = Modifier.height(8.dp))
             }
         }
     }
 }
-@Composable
-fun ScheduleCard(schedule: Schedule) {
-    Column(modifier = Modifier.padding(vertical = 8.dp)) {
-        schedule.tasks?.forEach { task ->
-            TaskCard(task)
-            Spacer(modifier = Modifier.height(8.dp))
-        }
-    }
-}
+
 
 @Composable
-fun TaskCard(task: Task) {
+fun ScheduleTaskCard(task: Task) {
     Card(
         modifier = Modifier
             .fillMaxWidth()

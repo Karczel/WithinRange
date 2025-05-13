@@ -7,9 +7,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -27,7 +29,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.firestore
-import org.karczelapp.withinrange.dataclass.Schedule
 import org.karczelapp.withinrange.dataclass.Task
 import org.karczelapp.withinrange.dataclass.TaskStatus
 import org.karczelapp.withinrange.ui.theme.WithinRangeTheme
@@ -40,7 +41,7 @@ fun DashboardScreen(modifier: Modifier = Modifier) {
         modifier = modifier
     )
 
-    var schedules by remember { mutableStateOf<List<Schedule>>(emptyList()) }
+    var tasks by remember { mutableStateOf<List<Pair<String, Task>>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
     var auth: FirebaseAuth = Firebase.auth
     val user = auth.currentUser
@@ -54,15 +55,14 @@ fun DashboardScreen(modifier: Modifier = Modifier) {
 
                 result.documents.forEach { doc ->
                     val scheduleId = doc.id
-                    val uid = doc.getString("uid") ?: return@forEach
 
-                    // Fetch tasks subcollection of each schedule (if you moved to subcollection model)
                     Firebase.firestore.collection("schedules")
                         .document(scheduleId)
                         .collection("tasks")
+                        .orderBy("timeDue", com.google.firebase.firestore.Query.Direction.DESCENDING) // order by timestamp desc
                         .get()
                         .addOnSuccessListener { taskResult ->
-                            val tasks = taskResult.documents.mapNotNull { taskDoc ->
+                            val fetchedTasks = taskResult.documents.mapNotNull { taskDoc ->
                                 val title = taskDoc.getString("title") ?: ""
                                 val details = taskDoc.getString("details")
                                 val location = taskDoc.getGeoPoint("location") ?: GeoPoint(0.0, 0.0)
@@ -74,16 +74,10 @@ fun DashboardScreen(modifier: Modifier = Modifier) {
                                     TaskStatus.TO_GO
                                 }
 
-                                Task(
-                                    title = title,
-                                    details = details,
-                                    location = location,
-                                    timeDue = timeDue,
-                                    status = status
-                                )
+                                Pair(scheduleId, Task(title, details, location, timeDue, status))
                             }
 
-                            schedules = schedules + Schedule(uid = uid, tasks = tasks)
+                            tasks = tasks + fetchedTasks.sortedBy { it.second.timeDue }
                         }
                 }
                 isLoading = false
@@ -94,28 +88,50 @@ fun DashboardScreen(modifier: Modifier = Modifier) {
             }
     }
 
+
     Surface(modifier = modifier.fillMaxSize()) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            items(schedules) { schedule ->
-                DashboardCard(schedule)
+            items(tasks) { taskPair ->
+                DashboardTaskCard(taskPair)
+                Spacer(modifier = Modifier.height(8.dp))
             }
+        }
+
+    }
+}
+
+
+@Composable
+fun DashboardTaskCard(taskPair: Pair<String, Task>) {
+    val (scheduleId, task) = taskPair
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .padding(vertical = 4.dp),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(text = "From Schedule ID: $scheduleId", style = MaterialTheme.typography.labelMedium)
+            Text(text = "Title: ${task.title}", style = MaterialTheme.typography.titleMedium)
+            task.details?.let { Text(text = "Details: $it", style = MaterialTheme.typography.bodyMedium) }
+            Text(
+                text = "Location: (${task.location.latitude}, ${task.location.longitude})",
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Text(
+                text = "Time Due: ${task.timeDue?.toDate()?.toString() ?: "No due date"}",
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Text(text = "Status: ${task.status}", style = MaterialTheme.typography.bodyMedium)
         }
     }
 }
 
-@Composable
-fun DashboardCard(schedule: Schedule) {
-    Column(modifier = Modifier.padding(vertical = 8.dp)) {
-        schedule.tasks?.forEach { task ->
-            TaskCard(task)
-            Spacer(modifier = Modifier.height(8.dp))
-        }
-    }
-}
 
 
 @Preview(showBackground = true)
