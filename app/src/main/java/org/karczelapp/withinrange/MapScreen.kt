@@ -46,8 +46,8 @@ fun MapScreen(){
     val screenContext = LocalContext.current
     val locationProvider = LocationServices.getFusedLocationProviderClient(screenContext)
 
-    var latValue:Double? by remember { mutableStateOf(0.0) }
-    var lonValue:Double? by remember { mutableStateOf(0.0) }
+    var latValue:Double? by remember { mutableStateOf(13.7563) }
+    var lonValue:Double? by remember { mutableStateOf(100.5018) }
 
     val locationCallback = object : LocationCallback() {
         override fun onLocationResult(p0: LocationResult) {
@@ -90,6 +90,7 @@ fun MapScreen(){
             Column ( modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally){
+                GroupComponent()
                 if(latValue!=null && lonValue!=null)
                     MapDisplay(lat = latValue!!, lon = lonValue!!)
                 else MapDisplay()
@@ -130,7 +131,6 @@ fun MapDisplay(lat:Double = 13.74466, lon:Double = 100.53291,
             selectedLocation.value = latLng
         }
     ) {
-        GroupComponent()
         // Show marker at selected location
         Marker(
             state = MarkerState(position = selectedLocation.value),

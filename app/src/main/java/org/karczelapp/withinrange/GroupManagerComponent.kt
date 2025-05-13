@@ -8,6 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
@@ -19,7 +20,7 @@ fun GroupComponent() {
 
     Box(
         modifier = Modifier
-            .fillMaxWidth()
+            .wrapContentWidth()
             .padding(top = 16.dp),
         contentAlignment = Alignment.TopCenter
     ) {
@@ -30,8 +31,6 @@ fun GroupComponent() {
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            modifier = Modifier
-                .wrapContentWidth(Alignment.CenterHorizontally)
         ) {
             DropdownMenuItem(
                 text = { Text("Group 1") },
@@ -50,6 +49,7 @@ fun GroupComponent() {
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable

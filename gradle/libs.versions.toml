@@ -32,6 +32,9 @@ navigationCompose = "2.9.0"
 constraintLayoutVersion = "2.0.4"
 constraintlayoutCompose = "1.1.1"
 firebaseMessaging = "24.1.1"
+firebaseStorageKtx = "21.0.1"
+firebaseFirestoreKtx = "25.1.4"
+firebaseAnalyticsKtx = "22.4.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -70,6 +73,9 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 constraint-layout = { group = "com.android.support.constraint", name = "constraint-layout", version.ref = "constraintLayoutVersion" }
 androidx-constraintlayout-compose = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "constraintlayoutCompose" }
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging", version.ref = "firebaseMessaging" }
+firebase-storage-ktx = { group = "com.google.firebase", name = "firebase-storage-ktx", version.ref = "firebaseStorageKtx" }
+firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
+firebase-analytics-ktx = { group = "com.google.firebase", name = "firebase-analytics-ktx", version.ref = "firebaseAnalyticsKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

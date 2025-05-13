@@ -36,7 +36,7 @@ fun EventComponent(
         ) {
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "Event name",
+                text = "Task name",
                 style = MaterialTheme.typography.headlineLarge,
                 )
             Spacer(modifier = Modifier.height(16.dp))

@@ -45,9 +45,9 @@ import org.karczelapp.withinrange.dataclass.PathHistory
 import org.karczelapp.withinrange.ui.theme.WithinRangeTheme
 
 val mockHistory = listOf(
-    PathHistory("user", GeoPoint(13.7441, 100.5321), Timestamp.now()),
-    PathHistory("user", GeoPoint(13.7450, 100.5330), Timestamp.now()),
-    PathHistory("user", GeoPoint(13.7460, 100.5340), Timestamp.now()),
+    PathHistory(GeoPoint(13.7441, 100.5321), Timestamp.now()),
+    PathHistory(GeoPoint(13.7450, 100.5370), Timestamp.now()),
+    PathHistory(GeoPoint(13.7460, 100.5340), Timestamp.now()),
 )
 
 @Composable
@@ -56,8 +56,8 @@ fun PathHistoryScreen(modifier: Modifier = Modifier) {
     val screenContext = LocalContext.current
     val locationProvider = LocationServices.getFusedLocationProviderClient(screenContext)
 
-    var latValue:Double? by remember { mutableStateOf(0.0) }
-    var lonValue:Double? by remember { mutableStateOf(0.0) }
+    var latValue:Double? by remember { mutableStateOf(13.7461) }
+    var lonValue:Double? by remember { mutableStateOf(100.5341) }
 
     val locationCallback = object : LocationCallback() {
         override fun onLocationResult(p0: LocationResult) {
