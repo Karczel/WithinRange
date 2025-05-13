@@ -204,21 +204,21 @@ fun ProfileScreen() {
                 color = Color.Gray
             )
 
-            // Change profile image Button
-            Button(
-                onClick = {
-                    // Trigger the image picker
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                        launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-                    } else {
-                        // For older Android versions, continue with the previous method
-//                        launcher.launch("image/*")
-                    }
-                },
-                enabled = !isUploading
-            ) {
-                Text(if (isUploading) "Uploading..." else "Edit Profile Picture")
-            }
+//            // Change profile image Button
+//            Button(
+//                onClick = {
+//                    // Trigger the image picker
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+//                        launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+//                    } else {
+//                        // For older Android versions, continue with the previous method
+////                        launcher.launch("image/*")
+//                    }
+//                },
+//                enabled = !isUploading
+//            ) {
+//                Text(if (isUploading) "Uploading..." else "Edit Profile Picture")
+//            }
         }
     }
 }
